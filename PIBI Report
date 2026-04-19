@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>PIBI Generator</title>
+<style>
+body {font-family: Arial; padding:20px; max-width:800px; margin:auto;}
+input, select, textarea {width:100%; margin-bottom:10px; padding:8px;}
+button {padding:10px; background:#333; color:#fff; border:none; cursor:pointer;}
+.output {white-space:pre-wrap; background:#f4f4f4; padding:15px; margin-top:20px;}
+</style>
+</head>
+<body>
+
+<h2>PIBI Wording Generator</h2>
+
+<label>Property Type</label>
+<select id="type">
+<option>House</option>
+<option>Ground Floor Flat</option>
+<option>Upper Flat</option>
+</select>
+
+<label>Overhang (mm)</label>
+<input id="overhang">
+
+<label>Extension? (details if yes)</label>
+<input id="extension">
+
+<label>DPC (Front / Rear / Side or N/A)</label>
+<input id="dpc">
+
+<label>Substrate / Rot</label>
+<textarea id="rot"></textarea>
+
+<label>Structural Issues</label>
+<textarea id="struct"></textarea>
+
+<label>Damp</label>
+<textarea id="damp"></textarea>
+
+<label>Openings</label>
+<textarea id="openings"></textarea>
+
+<label>Undercuts</label>
+<textarea id="undercuts"></textarea>
+
+<label>Services / Fixtures</label>
+<textarea id="services"></textarea>
+
+<label>Pre-install Works</label>
+<textarea id="works"></textarea>
+
+<button onclick="generate()">Generate Wording</button>
+
+<div class="output" id="output"></div>
+
+<script>
+function generate(){
+
+let type = document.getElementById("type").value;
+let overhang = document.getElementById("overhang").value;
+let extension = document.getElementById("extension").value;
+let dpc = document.getElementById("dpc").value;
+let rot = document.getElementById("rot").value;
+let struct = document.getElementById("struct").value;
+let damp = document.getElementById("damp").value;
+let openings = document.getElementById("openings").value;
+let undercuts = document.getElementById("undercuts").value;
+let services = document.getElementById("services").value;
+let works = document.getElementById("works").value;
+
+let dpcText = "";
+if(type === "Upper Flat"){
+  dpcText = "DPC not applicable due to dwelling below.";
+}else{
+  dpcText = "The DPC is recorded at approximately " + dpc + ".";
+}
+
+let roofText = "";
+if(type === "Ground Floor Flat"){
+  roofText = "Roofline elements are not applicable due to another dwelling above.";
+}else{
+  roofText = "The roof overhang is approximately " + overhang + "mm.";
+}
+
+let extensionText = extension ? "Extension noted: " + extension + "." : "";
+
+let output = `
+External Walls & Substrate
+The external walls were inspected and found to be ${rot || "in acceptable condition"}. ${rot ? "Defects noted: " + rot + "." : ""}
+
+Structural Condition
+${struct || "No evidence of structural movement noted during inspection."}
+
+Damp & Moisture
+${damp || "No evidence of damp identified."}
+
+DPC / Ground Interface
+${dpcText}
+
+Roofline & Overhang
+${roofText}
+${extensionText}
+
+Openings
+${openings || "Windows and doors appear in satisfactory condition."}
+
+Ventilation / Undercuts
+${undercuts || "All door undercuts appear compliant."}
+
+Services & Fixtures
+${services || "No significant external fixtures requiring relocation."}
+
+Pre-Installation Requirements
+${works || "No significant works required prior to installation."}
+`;
+
+document.getElementById("output").innerText = output;
+
+}
+</script>
+
+</body>
+</html>
